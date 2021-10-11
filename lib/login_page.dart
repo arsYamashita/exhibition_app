@@ -1,62 +1,136 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_ui/flutter_auth_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+import 'main_page.dart';
+
+class MyAuthPage extends StatefulWidget {
+  @override
+  _MyAuthPageState createState() => _MyAuthPageState();
+}
+
+class _MyAuthPageState extends State<MyAuthPage> {
+// 入力されたメールアドレス
+  String newUserEmail = "";
+  // 入力されたパスワード
+  String newUserPassword = "";
+  // 入力されたメールアドレス（ログイン）
+  String loginUserEmail = "";
+  // 入力されたパスワード（ログイン）
+  String loginUserPassword = "";
+  // 登録・ログインに関する情報を表示
+  String infoText = "";
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              ElevatedButton(
-                child: const Text("start ui"),
-                onPressed: () async {
-                  final providers = [
-                    AuthUiProvider.anonymous,
-                    AuthUiProvider.email,
-                    AuthUiProvider.phone,
-                    AuthUiProvider.apple,
-                    AuthUiProvider.github,
-                    AuthUiProvider.google,
-                    AuthUiProvider.microsoft,
-                    AuthUiProvider.yahoo,
-                  ];
 
-                  final result = await FlutterAuthUi.startUi(
-                    items: providers,
-                    tosAndPrivacyPolicy: TosAndPrivacyPolicy(
-                      tosUrl: "https://www.google.com",
-                      privacyPolicyUrl: "https://www.google.com",
-                    ),
-                    androidOption: AndroidOption(
-                      enableSmartLock: false, // default true
-                      showLogo: true, // default false
-                      overrideTheme: true, // default false
-                    ),
-                    emailAuthOption: EmailAuthOption(
-                      requireDisplayName: true, // default true
-                      enableMailLink: false, // default false
-                      handleURL: '',
-                      androidPackageName: '',
-                      androidMinimumVersion: '',
-                    ),
-                  );
-                  print(result);
+    return Scaffold(
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(32),
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                // テキスト入力のラベルを設定
+                decoration: InputDecoration(labelText: "メールアドレス"),
+                onChanged: (String value) {
+                  setState(() {
+                    newUserEmail = value;
+                  });
                 },
               ),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: InputDecoration(labelText: "パスワード（６文字以上）"),
+                // パスワードが見えないようにする
+                obscureText: true,
+                onChanged: (String value) {
+                  setState(() {
+                    newUserPassword = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () async {
-                  await FlutterAuthUi.signOut();
-                  print('Signed out !');
+                  try {
+                    // メール/パスワードでユーザー登録
+                    final FirebaseAuth auth = FirebaseAuth.instance;
+                    final UserCredential result =
+                    await auth.createUserWithEmailAndPassword(
+                      email: newUserEmail,
+                      password: newUserPassword,
+                    );
+
+                    // 登録したユーザー情報
+                    final User user = result.user!;
+                    setState(() {
+                      infoText = "登録OK：${user.email}";
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainPage(),
+                          )
+                      );
+                    });
+                  } catch (e) {
+                    // 登録に失敗した場合
+                    setState(() {
+                      infoText = "登録NG：${e.toString()}";
+                    });
+                  }
                 },
-                child: Text('sign out'),
+                child: Text("ユーザー登録"),
               ),
+              const SizedBox(height: 32),
+              TextFormField(
+                decoration: InputDecoration(labelText: "メールアドレス"),
+                onChanged: (String value) {
+                  setState(() {
+                    loginUserEmail = value;
+                  });
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: "パスワード"),
+                obscureText: true,
+                onChanged: (String value) {
+                  setState(() {
+                    loginUserPassword = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    // メール/パスワードでログイン
+                    final FirebaseAuth auth = FirebaseAuth.instance;
+                    final UserCredential result =
+                    await auth.signInWithEmailAndPassword(
+                      email: loginUserEmail,
+                      password: loginUserPassword,
+                    );
+                    // ログインに成功した場合
+                    final User user = result.user!;
+                    setState(() {
+                      infoText = "ログインOK：${user.email}";
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainPage(),
+                          )
+                      );
+                    });
+                  } catch (e) {
+                    // ログインに失敗した場合
+                    setState(() {
+                      infoText = "ログインNG：${e.toString()}";
+                    });
+                  }
+                },
+                child: Text("ログイン"),
+              ),
+              const SizedBox(height: 8),
+              Text(infoText)
             ],
           ),
         ),
