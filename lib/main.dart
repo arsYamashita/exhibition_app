@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
       ),
       home: RootPage(),
         routes: <String,WidgetBuilder>{
-          '/home':(BuildContext context) => MainPage(),
-          '/login':(BuildContext context) => MyAuthPage(),
+          '/main_page':(BuildContext context) => MainPage(),
+          '/login_page':(BuildContext context) => MyAuthPage(),
         }
     );
   }
