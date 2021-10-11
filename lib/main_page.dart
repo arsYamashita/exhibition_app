@@ -114,7 +114,37 @@ class MainPage extends StatelessWidget {
                       ),
                     ],
                   )
-              ),Container(
+              ),
+              Container(
+                  child:Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: 50,
+                      ),
+                      Container(
+                        height: 100,
+                        width: 200,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(
+                            Icons.add_business,
+                            color: Colors.white,
+                          ),
+                          label: const Text('マスター登録依頼'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange,
+                            onPrimary: Colors.white,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                      Container(
+                        width: 50,
+                      ),
+                    ],
+                  )
+              ),
+              Container(
                 height: 50,
               ),],
           ),
