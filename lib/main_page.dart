@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 
+import 'exhibition _product_management_page.dart';
+
 class MainPage extends StatelessWidget {
   const MainPage() : super();
 
@@ -90,7 +92,14 @@ class MainPage extends StatelessWidget {
                             primary: Colors.green,
                             onPrimary: Colors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ExhibitionProductManagementPage(),
+                                    //ExhibitionProductManagementPage(),
+                                )
+                            );
+                          },
                         ),
                       ),
                       Container(
