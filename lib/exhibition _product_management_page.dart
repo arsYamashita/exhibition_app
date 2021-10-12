@@ -90,22 +90,31 @@ Widget buildTaskList() {
       body: SafeArea(
           child:ChangeNotifierProvider(
             create: (_) => ExhibitionProductManagementModel()..getProducts(),
-            child: Consumer<ExhibitionProductManagementModel>(
-              builder: (context, model, child) {
-                return ListView.builder(
-                  itemCount: model.products.length,
-                  itemBuilder: (context, int position) =>
-                      Card(
-                        child: ListTile(
+            child: Container(
+              padding: const EdgeInsets.only(left: 50,right: 50,top: 30),
+              child: Consumer<ExhibitionProductManagementModel>(
+                builder: (context, model, child) {
+                  return ListView.builder(
+                    itemCount: model.products.length,
+                    itemBuilder: (context, int position) =>
+                        Card(
+                          child: ListTile(
                             leading: ConstrainedBox(
                               constraints: BoxConstraints(),
                               child: Image.network(model.products[position].imagePath.toString()), //microCMSの画像変更機能を利用
                             ),
-                            title: Text(model.products[position].name),
-                            subtitle: Text(model.products[position].productCode)),
-                      ),
-                );
-              },
+                            title: Container(child: Row(children: [
+                              Text(model.products[position].name + '(${model.products[position].quantity})'),
+                            ],),),
+                            subtitle: Text(model.products[position].productCode),
+                            onTap: (){
+                              showDetail(context,model.products[position]);
+                            },
+                          ),
+                        ),
+                  );
+                },
+              ),
             ),)));
 }
 class ProductListItem extends StatelessWidget {
@@ -149,4 +158,39 @@ class ProductListItem extends StatelessWidget {
 
         ],),),);
   }
+}
+
+void showDetail (BuildContext context,Product product){
+  showDialog(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: <Widget>[
+            AlertDialog(
+              title: Text(product.name),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       Image.network(product.imagePath.toString()),
+                       Text('有効期間:' + product.period,textAlign: TextAlign.left),
+                       Text('商品コード:' + product.productCode,textAlign: TextAlign.left),
+                       Text('箱数量:' + product.unit,textAlign: TextAlign.left),
+                       Text('保管数量:' + '${product.quantity} 箱',textAlign: TextAlign.left),
+                       Text('状態:' + product.status,textAlign: TextAlign.left),
+                     ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+// ボタン
+              ],
+            ),
+          ],
+        );
+      }
+  );
 }
