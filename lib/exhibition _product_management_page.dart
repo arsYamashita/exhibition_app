@@ -85,7 +85,7 @@ Widget buildTaskList() {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text('Exhibiton 〜展示会ポータル〜'),
+        title: Text('展示品管理'),
       ),
       body: SafeArea(
           child:ChangeNotifierProvider(

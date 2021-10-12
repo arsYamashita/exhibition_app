@@ -1,3 +1,4 @@
+import 'package:develop/request_move_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 
@@ -117,6 +118,12 @@ class MainPage extends StatelessWidget {
                             onPrimary: Colors.white,
                           ),
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => RequestMoveLocationPage(),
+                                  //ExhibitionProductManagementPage(),
+                                )
+                            );
                           },
                         ),
                       ),
